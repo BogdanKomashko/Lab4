@@ -1,0 +1,28 @@
+from sklearn.preprocessing import PolynomialFeatures
+
+# Завантаження даних
+input_file_multi = 'data_multivar_regr.txt'
+data_multi = np.loadtxt(input_file_multi, delimiter=',')
+X_m, y_m = data_multi[:, :-1], data_multi[:, -1]
+
+# Розбивка
+num_train_m = int(0.8 * len(X_m))
+X_m_train, y_m_train = X_m[:num_train_m], y_m[:num_train_m]
+X_m_test, y_m_test = X_m[num_train_m:], y_m[num_train_m:]
+
+# Лінійний регресор
+linear_regressor = linear_model.LinearRegression()
+linear_regressor.fit(X_m_train, y_m_train)
+
+# Поліноміальна регресія (ступінь 10)
+polynomial = PolynomialFeatures(degree=10)
+X_train_transformed = polynomial.fit_transform(X_m_train)
+poly_linear_model = linear_model.LinearRegression()
+poly_linear_model.fit(X_train_transformed, y_m_train)
+
+# Прогнозування для точки
+datapoint = [[7.75, 6.35, 5.56]]
+poly_datapoint = polynomial.fit_transform(datapoint)
+
+print("\nLinear regression prediction:\n", linear_regressor.predict(datapoint))
+print("\nPolynomial regression prediction:\n", poly_linear_model.predict(poly_datapoint))
