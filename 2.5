@@ -1,0 +1,29 @@
+# Генерація даних
+m = 100
+X_v5 = 6 * np.random.rand(m, 1) - 3
+y_v5 = 0.4 * X_v5**2 + X_v5 + 4 + np.random.randn(m, 1)
+
+# Перетворення ознак у поліноміальні (ступінь 2, оскільки у нас квадратне рівняння)
+poly_features = PolynomialFeatures(degree=2, include_bias=False)
+X_poly_v5 = poly_features.fit_transform(X_v5)
+
+# Навчання моделі
+lin_reg_v5 = linear_model.LinearRegression()
+lin_reg_v5.fit(X_poly_v5, y_v5)
+
+print("Intercept (вільний член):", lin_reg_v5.intercept_)
+print("Coefficients (коефіцієнти):", lin_reg_v5.coef_)
+
+# Прогноз для побудови плавної лінії
+X_new = np.linspace(-3, 3, 100).reshape(100, 1)
+X_new_poly = poly_features.transform(X_new)
+y_new = lin_reg_v5.predict(X_new_poly)
+
+# Побудова графіка
+plt.plot(X_v5, y_v5, "b.", label="Згенеровані дані")
+plt.plot(X_new, y_new, "r-", linewidth=2, label="Прогноз (Регресія)")
+plt.xlabel("$x_1$")
+plt.ylabel("$y$")
+plt.legend(loc="upper left")
+plt.title("Завдання 2.5: Поліноміальна регресія")
+plt.show()
